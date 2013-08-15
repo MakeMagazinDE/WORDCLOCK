@@ -8,7 +8,7 @@ Enthalten sind zwei Firmware-Versionen:
 WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel<br>
 WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip"
 
-Sie benötigen zum Kompilieren den kostenlosen Conpiler AVRCo Pascal Mega8 von E-Lab (http://www.elab.de)
+Sie benötigen zum Kompilieren den kostenlosen Compiler AVRCo Pascal Mega8 von E-Lab (http://www.elab.de)
 
 Layout und Schaltpläne zum Selbstanfertigen der Platinen ebenfalls beiliegend. Wir empfehlen,
 auf den ab Ende August 2013 verfügbaren Bausatz "c't-WordClock" von Segor (http://www.segor.de) zurückzugreifen.
