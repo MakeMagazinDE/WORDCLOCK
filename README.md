@@ -31,8 +31,6 @@ was die Verdrahtung stark vereinfacht und einen besonders flachen Aufbau ermögl
 Auf jedem LED-Streifen befindet sich ein Lötpad, das mit dem entsprechenden Anschluss "LED MATRIX ANODES" 
 (Einzeladern von PL1 und PL2, je eine Ader zu jedem Strip) zu verbinden ist. 
 Beachten Sie die Kennzeichnung BTM ROW (unterste Reihe) bis TOP ROW (oberste Reihe). 
-Sollte die Platine zu hoch geraten, können für PL1 und PL2 abgewinkelte Ausführungen 
-gewählt werden (bitte ggf. gesondert bei Segor bestellen).
 
 Die Micromatch-Stecker von Strips und Uhrenplatine fluchten nur, 
 wenn man die Platine an den Rand eines 40-cm-Bilderrahmens einsetzt. 
