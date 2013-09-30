@@ -11,7 +11,8 @@ WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip"
 Der Download gestaltet sich einfacher, wenn Sie das komplette Repo als ZIP downloaden (Button rechts) und die HEX-Files extrahieren.
 Ansonsten wird die HEX-Datei als Text angezeigt, der erst in einen Texteditor geladen und neu abgespeichert werden muss.
 
-Sie benötigen zum Kompilieren den kostenlosen Compiler AVRCo Pascal Mega8 von E-Lab (http://www.e-lab.de)
+Sie benötigen zum Kompilieren bei eigenen Änderungen den kostenlosen Compiler 
+AVRCo Pascal Mega8 von E-Lab (http://www.e-lab.de). Ansonsten reicht ein AVR-Programmer.
 
 Layout und Schaltpläne zum Selbstanfertigen der Platinen ebenfalls beiliegend. Wir empfehlen,
 auf den ab Ende August 2013 verfügbaren Bausatz "c't-WordClock" von Segor (http://www.segor.de) zurückzugreifen.
