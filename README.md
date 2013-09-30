@@ -6,10 +6,11 @@ Schematics, Layouts, Firmware für WordClock-Plojekt aus c't-Hacks 3/2013
 Enthalten sind zwei Firmware-Versionen:
 
 WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel<br>
-WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip"
+WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip" (Segor-Bausatz)
 
-Der Download gestaltet sich einfacher, wenn Sie das komplette Repo als ZIP downloaden (Button rechts) und die HEX-Files extrahieren.
-Ansonsten wird die HEX-Datei als Text angezeigt, der erst in einen Texteditor geladen und neu abgespeichert werden muss.
+Der Download gestaltet sich einfacher, wenn Sie dieses komplette Repository als ZIP downloaden (Button rechts) 
+und die HEX-Files extrahieren. Ansonsten wird die HEX-Datei als Text angezeigt, der erst in einen 
+Texteditor geladen und neu abgespeichert werden muss.
 
 Sie benötigen zum Kompilieren bei eigenen Änderungen den kostenlosen Compiler 
 AVRCo Pascal Mega8 von E-Lab (http://www.e-lab.de). Ansonsten reicht ein AVR-Programmer.
@@ -20,9 +21,22 @@ auf den ab Ende August 2013 verfügbaren Bausatz "c't-WordClock" von Segor (http
 Wichtige Hinweise
 =================
 
-Im Unterschied zur Darstellung im Artikel wird der Bausatz unbestückt und unprogrammiert geliefert. Sie benötigen deshalb
-neben SMD-Lötkenntnissen auch einen Programmer für Atmel AVR Prozessoren.
+Im Unterschied zur Darstellung im Artikel wird der Bausatz unbestückt und unprogrammiert geliefert. 
+Sie benötigen deshalb neben SMD-Lötkenntnissen auch einen Programmer für Atmel AVR Prozessoren.
+
 Als Verbesserung enthält der Komplettbausatz einen 12 LED-Streifen mit weißen Osram PointLEDs.
-Der Streifen wird nun mit MicroMatch-Steckverbindern an die WordClock-Strip-Platine angeschlossen, was die Verdrahtung stark vereinfacht und einen besonders flachen Aufbau ermöglicht.
+Der Streifen wird nun mit MicroMatch-Steckverbindern an die WordClock-Strip-Platine angeschlossen, 
+was die Verdrahtung stark vereinfacht und einen besonders flachen Aufbau ermöglicht.
+
+Auf jedem LED-Streifen befindet sich ein Lötpad, das mit dem entsprechenden Anschluss "LED MATRIX ANODES" 
+(Einzeladern von PL1 und PL2, je eine Ader zu jedem Strip) zu verbinden ist. 
+Beachten Sie die Kennzeichnung BTM ROW (unterste Reihe) bis TOP ROW (oberste Reihe). 
+Sollte die Platine zu hoch geraten, können für PL1 und PL2 abgewinkelte Ausführungen 
+gewählt werden (bitte ggf. gesondert bei Segor bestellen).
+
+Die Micromatch-Stecker von Strips und Uhrenplatine fluchten nur, 
+wenn man die Platine an den Rand eines 40-cm-Bilderrahmens einsetzt. 
+Sollte das Flachbandkabel etwas zu "störrisch" sein, kann man es nach 
+Anpressen der Micromatch-Stecker (Nase = Pin 1 = rote Ader) in 2x6 Adern aufschneiden.
 
 -cm
