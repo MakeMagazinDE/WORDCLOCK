@@ -35,6 +35,7 @@ Beachten Sie die Kennzeichnung BTM ROW (unterste Reihe) bis TOP ROW (oberste Rei
 Die Micromatch-Stecker von Strips und Uhrenplatine fluchten nur, 
 wenn man die Platine an den Rand eines 40-cm-Bilderrahmens einsetzt. 
 Sollte das Flachbandkabel etwas zu "störrisch" sein, kann man es nach 
-Anpressen der Micromatch-Stecker (Nase = Pin 1 = rote Ader) in 2x6 Adern aufschneiden.
+Anpressen der Micromatch-Stecker (z.B. in einem Mini-Schraubstock, 
+Nase = Pin 1 = rote Ader) in 2x6 Adern aufschneiden.
 
 -cm
