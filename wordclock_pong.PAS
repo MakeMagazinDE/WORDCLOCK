@@ -3,7 +3,7 @@ program wordclock;
 {$NOSHADOW}
 { $WG}                     {global Warnings off}
 
-{ $DEFINE PONGBOARD} // mit Original-Matrix 11 x 10, sonst 12 x 12
+{$DEFINE PONGBOARD} // mit Original-Matrix 11 x 10, sonst 12 x 12
 
 
 Device = mega8, VCC=5;
