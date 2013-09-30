@@ -5,8 +5,9 @@ Schematics, Layouts, Firmware für WordClock-Plojekt aus c't-Hacks 3/2013
 
 Enthalten sind zwei Firmware-Versionen:
 
-WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel mit Wordclock_110-Textanzeige<br>
-WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip" (Segor-Bausatz) mit Wordclock_144-Textanzeige
+WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel, mit Wordclock_110.pdf
+
+WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip" (Segor-Bausatz), mit Wordclock_144.pdf
 
 Der Download gestaltet sich einfacher, wenn Sie dieses komplette Repository als ZIP downloaden (Button rechts) 
 und die HEX-Files extrahieren. Ansonsten wird die HEX-Datei als Text angezeigt, der erst in einen 
@@ -23,6 +24,9 @@ Wichtige Hinweise
 
 Im Unterschied zur Darstellung im Artikel wird der Bausatz unbestückt und unprogrammiert geliefert. 
 Sie benötigen deshalb neben SMD-Lötkenntnissen auch einen Programmer für Atmel AVR Prozessoren.
+
+Die im Heft abgedruckte Textanzeige war fehlerhaft und kann bestimmte Phrasen nicht anzeigen. 
+Bitte verwenden Sie die Vorlage "Wordclock_144.pdf".
 
 Als Verbesserung enthält der Komplettbausatz einen 12 LED-Streifen mit weißen Osram PointLEDs.
 Der Streifen wird nun mit MicroMatch-Steckverbindern an die WordClock-Strip-Platine angeschlossen, 
