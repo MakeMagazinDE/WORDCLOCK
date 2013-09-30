@@ -5,8 +5,8 @@ Schematics, Layouts, Firmware für WordClock-Plojekt aus c't-Hacks 3/2013
 
 Enthalten sind zwei Firmware-Versionen:
 
-WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel<br>
-WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip" (Segor-Bausatz)
+WordClock_Pong_mega8.hex: lauffähig auf Franzis/Conrad "Pong"-Spiel mit Wordclock_110-Textanzeige<br>
+WordClock_mega8.hex: für c't-Wordclock-Platine "WordClock-Strip" (Segor-Bausatz) mit Wordclock_144-Textanzeige
 
 Der Download gestaltet sich einfacher, wenn Sie dieses komplette Repository als ZIP downloaden (Button rechts) 
 und die HEX-Files extrahieren. Ansonsten wird die HEX-Datei als Text angezeigt, der erst in einen 
