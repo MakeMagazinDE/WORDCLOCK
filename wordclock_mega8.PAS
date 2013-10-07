@@ -1,4 +1,6 @@
 program wordclock;
+// Wordclock-Version für c't Wordclock-Platine (Segor-Bausatz)
+// Q&D version, C. Meyer 7/2013
 
 {$NOSHADOW}
 { $WG}                     {global Warnings off}

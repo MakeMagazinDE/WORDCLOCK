@@ -1,9 +1,13 @@
-program wordclock;
+program wordclk_pong;
+
+// Wordclock-Version für Conrad-PONG--Platine
+// very Q&D version, C. Meyer 7/2013
+
 
 {$NOSHADOW}
 { $WG}                     {global Warnings off}
 
-{$DEFINE PONGBOARD} // mit Original-Matrix 11 x 10, sonst 12 x 12
+{ $DEFINE PONGBOARD} // mit Original-Matrix 11 x 10, sonst 12 x 12
 
 
 Device = mega8, VCC=5;
@@ -624,5 +628,5 @@ begin
     endif;
 
   endloop;
-end wordclock.
+end wordclk_pong.
 
