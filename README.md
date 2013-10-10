@@ -19,6 +19,8 @@ AVRCo Pascal Mega8 von E-Lab (http://www.e-lab.de). Ansonsten reicht ein AVR-Pro
 Layout und Schaltpläne zum Selbstanfertigen der Platinen ebenfalls beiliegend. Wir empfehlen,
 auf den ab Ende August 2013 verfügbaren Bausatz "c't-WordClock" von Segor (http://www.segor.de) zurückzugreifen.
 
+Fertig geschnittene Folien für die Frontplatte erhalten Sie zum Beispiel bei http://www.plottflott.de (40x40-Version).
+
 Wichtige Hinweise
 =================
 
