@@ -25,7 +25,7 @@ Wichtige Hinweise
 Im Unterschied zur Darstellung im Artikel wird der Bausatz unbestückt und unprogrammiert geliefert. 
 Sie benötigen deshalb neben SMD-Lötkenntnissen auch einen Programmer für Atmel AVR Prozessoren.
 
-Die im Heft abgedruckte Textanzeige war fehlerhaft und kann bestimmte Phrasen nicht anzeigen. 
+Im Artikel war von "NPN-Transistoren" die Rede, richtig ist aber "PNP". Schaltplan und Stückliste geben den korrekten PNP-Typ BC807 an. Die im Heft abgedruckte Textanzeige war fehlerhaft und kann bestimmte Phrasen nicht anzeigen. 
 Bitte verwenden Sie die Vorlage "Wordclock_144.pdf".
 
 Als Verbesserung enthält der Komplettbausatz einen 12 LED-Streifen mit weißen Osram PointLEDs.
