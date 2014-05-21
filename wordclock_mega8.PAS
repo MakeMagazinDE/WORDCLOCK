@@ -23,7 +23,7 @@ Define_Fuses
   ProgEEprom = false;
 
 Import SysTick, TWImaster, RTClock, TickTimer;
-// Import DCFclock;
+Import DCFclock;
 
 From System Import LongWord, Random;
 
@@ -39,7 +39,9 @@ Define
   TickTimer      = Timer1;
   RTClock        = iData, Time;
   RTCsource      = SysTick;
-  
+  DCFclock = iData;
+  DCFport = PinB, 2, positive; {Port, bitnummer, Polarität}
+  DCFfieldMode = decrement; // decrement, optional "reset"
 Implementation
 
 {$IDATA}
@@ -99,15 +101,16 @@ var
   HOURBTN[@PinB,1]: Bit;
   MINUTEBTN[@PinB,0]: Bit;
   TESTPIN[@PortB,4]: Bit;
+  DCFPIN[@PinB,2]: Bit;
 
 
 {$DATA}
-  b, i, led_row, tenmillisec: byte;
+  b, i, led_row: byte;
   LED_word: word;
 
 {$IDATA}
-  TickSema, Blinkenlights,
-  SecondSema, MinuteSema, LEDupdateRequest: Boolean;
+  DCFtoDS1307done, TickSema, Blinkenlights,
+  SecondSema, MinuteSema, DCFpresent: Boolean;
 
   LED_word_array: Array[0..11] of word;
 // Einzel-Zeilen, evt. einmal gebraucht
@@ -187,7 +190,7 @@ end;
 procedure DS1307setHour(my_hour: byte);
 var my_byte: byte;
 begin
-  my_Byte:= ByteToBCD(my_hour) and 31;
+  my_Byte:= ByteToBCD(my_hour) and $3F;
   TWIout(rtc_adr,2,my_Byte); // Stunden-Register
 end;
 
@@ -195,7 +198,7 @@ end;
 
 procedure InitPorts;
 begin
-  PortB:= %00000111;
+  PortB:= %00000111; // Pin B0 = Set Minute, B1 = Set Hous, B2 = DCF77 in
   DDRB:=  %00111000;
   
   PortC:= %00000000;
@@ -395,7 +398,6 @@ begin
       ptn2led(c_mittag);
     endif;
   endif;
-
 end;
 
 {--------------------------------------------------------------}
@@ -413,47 +415,91 @@ begin
   MinuteSema:= true;
   i:= DS1307getSecond;  // First Power up, Clock HALT Bit löschen
   DS1307setSecond(i);
+  DCFtoDS1307done:= false;
+  TESTPIN:= false;
+  DCFpresent:= false;
 
   loop
     if TickSema then
       TickSema:=false;
-      TESTPIN:= not TESTPIN;
       LED_SR_next;
     endif;
+    
+    if not DCFready then
+// Solange kein gültiges DCF-Telegramm empfangen wurde oder Empfang schlecht,
+// Uhrzeit aus DS1307 holen
+      if MinuteSema then
+        minute:= DS1307getMinute;
+        hour:= DS1307getHour;
+        RTCsetMinute(minute);
+        RTCsetHour(hour);
+        //Blinkenlights:= true;
+        BlinkTimer:= 10;
+        MinuteSema:= false;
+        time_to_letters(hour, minute,false);
+      endif;
+    else
+// DCF ist OK, Uhrzeit aus synchronisierter AVR-RTC holen
+      if MinuteSema then
+        minute:= RTCgetMinute;
+        hour:= RTCgetHour;
+        //Blinkenlights:= true;
+        BlinkTimer:= 10;
+        MinuteSema:= false;
+        time_to_letters(hour, minute,false);
+        if (not DCFtoDS1307done) then
+// bei einwandfreiem Empfang Uhrenchip einmal auf DCF-Zeit setzen
+          BlinkTimer:= 50;
+          Blinkenlights:= true;
+          DS1307setHour(hour);
+          DS1307setMinute(minute);
+          DS1307setSecond(RTCgetSecond);
+          DCFtoDS1307done:= true;
+        endif;
+      endif;
+    endif;
+      
 
     if MinuteSema then
       //Blinkenlights:= true;
       BlinkTimer:= 10;
       MinuteSema:= false;
-      minute:= DS1307getMinute;
-      hour:= DS1307getHour;
       time_to_letters(hour, minute,false);
-      LEDupdateRequest:= true;
     endif;
     
+    if (DCFfield > 0) and (not DCFtoDS1307done) then
+      if DCFPIN then
+        LED_word_line0 := LED_word_line0 and $FFFD;  // "X" löschen
+      else
+        LED_word_line0 := LED_word_line0 or 2;  // "X" anzeigen
+      endif;
+    endif;
+
     if SecondSema then
       SecondSema:= false;
-      if not HOURBTN then // neg. Logik!
-        inctolimwrap(hour,23,0);
-        DS1307setHour(hour);
-        DS1307setSecond(0);
-        RTCsetHour(hour);
-        RTCsetSecond(0);
-        time_to_letters(hour, minute, true);
-        LEDupdateRequest:= true;
-        Blinkenlights:= false;
-      endif;
+      TESTPIN:= DCFready;
       if not MINUTEBTN then // neg. Logik!
         if inctolimwrap(minute,59,0) then
           inctolimwrap(hour,23,0);
         endif;
-        DS1307setHour(hour);
-        DS1307setMinute(minute);
         DS1307setSecond(0);
-        RTCsetMinute(minute);
+        DS1307setMinute(minute);
+        DS1307setHour(hour);
         RTCsetSecond(0);
+        RTCsetMinute(minute);
+        RTCsetHour(hour);
         time_to_letters(hour, minute, true);
-        LEDupdateRequest:= true;
+        Blinkenlights:= false;
+      endif;
+      if not HOURBTN then // neg. Logik!
+        inctolimwrap(hour,23,0);
+        DS1307setSecond(0);
+        DS1307setMinute(minute);
+        DS1307setHour(hour);
+        RTCsetSecond(0);
+        RTCsetMinute(minute);
+        RTCsetHour(hour);
+        time_to_letters(hour, minute, true);
         Blinkenlights:= false;
       endif;
     endif;
