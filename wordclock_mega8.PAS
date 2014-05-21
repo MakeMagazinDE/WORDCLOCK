@@ -1,6 +1,6 @@
 program wordclock;
-// Wordclock-Version für c't Wordclock-Platine (Segor-Bausatz)
-// Q&D Version basiert auf WordClock für PONG, aber verbesserte Buchstaben-Kodierung
+// Wordclock-Version fï¿½r c't Wordclock-Platine (Segor-Bausatz)
+// Q&D Version basiert auf WordClock fï¿½r PONG, aber verbesserte Buchstaben-Kodierung
 // C. Meyer 7/2013
 
 {$NOSHADOW}
@@ -176,7 +176,7 @@ end;
 procedure DS1307setSecond(my_second: byte);
 var my_byte: byte;
 begin
-  my_Byte:= ByteToBCD(my_second) and $7F; // Clock HALT Bit immer löschen
+  my_Byte:= ByteToBCD(my_second) and $7F; // Clock HALT Bit immer lï¿½schen
   TWIout(rtc_adr,0,my_Byte); // Sekunden-Register
 end;
 
@@ -324,7 +324,8 @@ begin
         my_addhour:= 1;
         |
     9:
-        ptn2led(c_dreiviertel);
+        ptn2led(c_viertel);
+        ptn2led(c_vor);
         my_addhour:= 1;
         |
     10:
@@ -393,7 +394,10 @@ begin
     if my_hour < 12 then
       ptn2led(c_vor12);
       ptn2led(c_mittag);
-    elsif my_hour < 19 then
+  elsif my_hour > 12 then
+    if my_hour < 13 then
+      ptn2led(c_mittag);
+  elsif my_hour < 18 then
       ptn2led(c_nach12);
       ptn2led(c_mittag);
     endif;
@@ -413,7 +417,7 @@ begin
   
   EnableInts;
   MinuteSema:= true;
-  i:= DS1307getSecond;  // First Power up, Clock HALT Bit löschen
+  i:= DS1307getSecond;  // First Power up, Clock HALT Bit lï¿½schen
   DS1307setSecond(i);
   DCFtoDS1307done:= false;
   TESTPIN:= false;
