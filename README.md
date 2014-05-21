@@ -1,6 +1,8 @@
 c't-WORDCLOCK
 =============
 
+<b>Update 05/2014:</b> Support für DCF77-Empfänger wie in c't Hacks 2/2014 beschrieben.
+
 Schaltplan, Layouts, Stückliste, Firmware für **WordClock-Projekt** aus c't-Hacks 3/2013
 
 Enthalten sind zwei Firmware-Versionen:
