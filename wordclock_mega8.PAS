@@ -1,6 +1,7 @@
 program wordclock;
-// Wordclock-Version fï¿½r c't Wordclock-Platine (Segor-Bausatz)
-// Q&D Version basiert auf WordClock fï¿½r PONG, aber verbesserte Buchstaben-Kodierung
+// Version 1.02 mit Abschaltung nachts für DCF-Resync
+// Wordclock-Version für c't Wordclock-Platine (Segor-Bausatz)
+// Q&D Version basiert auf WordClock für PONG, aber verbesserte Buchstaben-Kodierung
 // C. Meyer 7/2013
 
 {$NOSHADOW}
@@ -33,8 +34,6 @@ Define
   SysTick        = 10;             {msec}
   StackSize      = $0032, iData;
   FrameSize      = $0032, iData;
-//  DCFclock       = iData;
-//  DCFport        = PinB, 2, positive; {Port, Pin#, Polarity}
   TWIpresc       = TWI_BR100;
   TickTimer      = Timer1;
   RTClock        = iData, Time;
@@ -91,6 +90,7 @@ const
   c_nach12: word   = $B000 or %111100000000;
   c_nachts: word   = $B000 or %111111000000;
   c_mittag: word   = $B000 or %000000111111;
+  c_test: word     = $0FFF;
 
 {--------------------------------------------------------------}
 { Var Declarations }
@@ -100,12 +100,12 @@ var
   SR_DATA[@PortB,3]: Bit;
   HOURBTN[@PinB,1]: Bit;
   MINUTEBTN[@PinB,0]: Bit;
-  TESTPIN[@PortB,4]: Bit;
+  TESTPIN[@PinB,4]: Bit;
   DCFPIN[@PinB,2]: Bit;
 
 
 {$DATA}
-  b, i, led_row: byte;
+  b, i, j, led_row: byte;
   LED_word: word;
 
 {$IDATA}
@@ -130,7 +130,8 @@ var
   UpdateTimer: SysTimer8;
   BlinkTimer, LED_select,
   hour, minute: Byte;
-
+  NightMode: Boolean;
+  
 {--------------------------------------------------------------}
 { functions }
 
@@ -176,7 +177,7 @@ end;
 procedure DS1307setSecond(my_second: byte);
 var my_byte: byte;
 begin
-  my_Byte:= ByteToBCD(my_second) and $7F; // Clock HALT Bit immer lï¿½schen
+  my_Byte:= ByteToBCD(my_second) and $7F; // Clock HALT Bit immer löschen
   TWIout(rtc_adr,0,my_Byte); // Sekunden-Register
 end;
 
@@ -198,8 +199,8 @@ end;
 
 procedure InitPorts;
 begin
-  PortB:= %00000111; // Pin B0 = Set Minute, B1 = Set Hous, B2 = DCF77 in
-  DDRB:=  %00111000;
+  PortB:= %00010111; // Pin B0 = Set Minute, B1 = Set Hous, B2 = DCF77 in
+  DDRB:=  %00101000; // Pin B4 = Test
   
   PortC:= %00000000;
   DDRC:=  %00001111;
@@ -224,6 +225,10 @@ end;
 procedure LED_SR_next;
 begin
   LED_off;
+  if NightMode then
+  // nachts Pause für DCF-Resync
+     return;
+  endif;
   if not inctolim(led_row, 11) then
     led_row:= 0;
     SR_DATA:= sr_on;
@@ -256,7 +261,6 @@ begin
   for i:= 0 to 11 do
     LED_word_array[i]:= 0;
   endfor;
-
   my_disp_uhr:= false;
   my_mod:= my_minute mod 5;
 // Minute words
@@ -324,8 +328,7 @@ begin
         my_addhour:= 1;
         |
     9:
-        ptn2led(c_viertel);
-        ptn2led(c_vor);
+        ptn2led(c_dreiviertel);
         my_addhour:= 1;
         |
     10:
@@ -342,7 +345,7 @@ begin
   my_hour:= my_hour + my_addhour;
 
   case my_hour of // Stunden-Schritte
-    0,12:
+    0,12,24:
       ptn2led(c_zwoelf);
       |
     1,13:
@@ -388,20 +391,22 @@ begin
   if my_disp_uhr then
     ptn2led(c_uhr);
   endif;
-  if my_hour < 5 then
-    ptn2led(c_nachts);
-  elsif my_hour > 8 then
-    if my_hour < 12 then
+  case my_hour of
+    0..5,24:
+      ptn2led(c_nachts);
+      |
+    9..11:
       ptn2led(c_vor12);
       ptn2led(c_mittag);
-  elsif my_hour > 12 then
-    if my_hour < 13 then
+      |
+    12..13:
       ptn2led(c_mittag);
-  elsif my_hour < 18 then
+      |
+    14..16:
       ptn2led(c_nach12);
       ptn2led(c_mittag);
-    endif;
-  endif;
+      |
+  endcase;
 end;
 
 {--------------------------------------------------------------}
@@ -410,18 +415,42 @@ end;
 
 begin
   InitPorts;
-  TickTimerTime(1000);  // Wert in us
+  TickTimerTime(600);  // Wert in us
   TickTimerStart;
   Blinkenlights:= true;
   BlinkTimer:= 20;
   
   EnableInts;
   MinuteSema:= true;
-  i:= DS1307getSecond;  // First Power up, Clock HALT Bit lï¿½schen
+  i:= DS1307getSecond;  // First Power up, Clock HALT Bit löschen
   DS1307setSecond(i);
   DCFtoDS1307done:= false;
   TESTPIN:= false;
+  led_row:= 0;
+  j:= 0;
   DCFpresent:= false;
+  // Testmodus. Wenn Pin 1 mit Pin 6 des ISP verbunden,
+  // alle Zeilen einmal komplett beleuchten
+  repeat
+    for i:= 0 to 11 do
+      if  i = j then
+        LED_word_array[i]:= $0555;
+      else
+        LED_word_array[i]:= $0AAA;
+      endif;
+    endfor;
+    if TickSema then
+      TickSema:=false;
+      LED_SR_next;
+      if not DCFPIN then  // ist beim Einschalten kurz low
+        DCFpresent:= true;
+      endif;
+    endif;
+    if SecondSema then
+      inc(j);
+      SecondSema:= false;
+    endif;
+  until j=12;
 
   loop
     if TickSema then
@@ -429,7 +458,7 @@ begin
       LED_SR_next;
     endif;
     
-    if not DCFready then
+    if (not DCFready) then
 // Solange kein gültiges DCF-Telegramm empfangen wurde oder Empfang schlecht,
 // Uhrzeit aus DS1307 holen
       if MinuteSema then
@@ -470,18 +499,10 @@ begin
       MinuteSema:= false;
       time_to_letters(hour, minute,false);
     endif;
-    
-    if (DCFfield > 0) and (not DCFtoDS1307done) then
-      if DCFPIN then
-        LED_word_line0 := LED_word_line0 and $FFFD;  // "X" löschen
-      else
-        LED_word_line0 := LED_word_line0 or 2;  // "X" anzeigen
-      endif;
-    endif;
 
     if SecondSema then
+      NightMode:= valueinrange(hour,1,4);
       SecondSema:= false;
-      TESTPIN:= DCFready;
       if not MINUTEBTN then // neg. Logik!
         if inctolimwrap(minute,59,0) then
           inctolimwrap(hour,23,0);
@@ -494,6 +515,7 @@ begin
         RTCsetHour(hour);
         time_to_letters(hour, minute, true);
         Blinkenlights:= false;
+        NightMode:= false;
       endif;
       if not HOURBTN then // neg. Logik!
         inctolimwrap(hour,23,0);
@@ -505,10 +527,11 @@ begin
         RTCsetHour(hour);
         time_to_letters(hour, minute, true);
         Blinkenlights:= false;
+        NightMode:= false;
       endif;
     endif;
     
-    if Blinkenlights then
+    if Blinkenlights and DCFpresent then
       if isSysTimerZero(UpdateTimer) and Blinkenlights then
         setSysTimer(UpdateTimer, lo(randomrange(5,15)));
         for i:= 0 to 11 do
